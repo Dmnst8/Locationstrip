@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مسار نهدي اليوم</title>
+<title>مسار نهدي</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -20,6 +20,7 @@
     --done-bg: #f0fdf4;
     --done-border: #bbf7d0;
     --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    --red: #ef4444;
   }
 
   body {
@@ -27,9 +28,10 @@
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    padding-bottom: 40px;
+    padding-bottom: 80px;
   }
 
+  /* ===== HEADER ===== */
   header {
     background: var(--green);
     color: white;
@@ -40,11 +42,28 @@
     box-shadow: 0 2px 12px rgba(0,176,124,0.25);
   }
 
-  header h1 {
-    font-size: 18px;
-    font-weight: 700;
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 4px;
   }
+
+  header h1 { font-size: 18px; font-weight: 700; }
+
+  .btn-new-trip {
+    background: rgba(255,255,255,0.2);
+    border: 1.5px solid rgba(255,255,255,0.5);
+    color: white;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-new-trip:hover { background: rgba(255,255,255,0.3); }
 
   .header-sub {
     font-size: 13px;
@@ -61,7 +80,6 @@
     height: 6px;
     overflow: hidden;
   }
-
   .progress-fill {
     height: 100%;
     background: white;
@@ -69,6 +87,53 @@
     transition: width 0.4s ease;
   }
 
+  /* ===== GPS BANNER ===== */
+  .gps-banner {
+    background: #fff7ed;
+    border-bottom: 2px solid #fed7aa;
+    padding: 14px 16px;
+    display: none;
+  }
+  .gps-banner.show { display: block; }
+  .gps-banner h3 { font-size: 14px; font-weight: 700; color: #9a3412; margin-bottom: 8px; }
+  .gps-banner p { font-size: 12px; color: #7c2d12; margin-bottom: 10px; line-height: 1.6; }
+  .gps-inputs { display: flex; gap: 8px; flex-wrap: wrap; }
+  .gps-input {
+    flex: 1; min-width: 120px;
+    padding: 9px 12px;
+    border: 1.5px solid #fed7aa;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    background: white;
+    direction: ltr;
+  }
+  .gps-input:focus { outline: none; border-color: var(--green); }
+  .btn-set-loc {
+    padding: 9px 18px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-set-loc:hover { background: var(--green-dark); }
+  .btn-dammam {
+    padding: 9px 14px;
+    background: white;
+    color: var(--green-dark);
+    border: 1.5px solid var(--green);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* ===== CONTAINER ===== */
   .container {
     max-width: 600px;
     margin: 0 auto;
@@ -85,6 +150,7 @@
     margin-top: 8px;
   }
 
+  /* ===== STOP CARD ===== */
   .stop-card {
     background: var(--card);
     border-radius: 14px;
@@ -93,11 +159,8 @@
     border: 1.5px solid var(--border);
     overflow: hidden;
     transition: all 0.2s ease;
-    cursor: pointer;
   }
-
   .stop-card:active { transform: scale(0.98); }
-
   .stop-card.done {
     background: var(--done-bg);
     border-color: var(--done-border);
@@ -112,48 +175,25 @@
   }
 
   .stop-num {
-    width: 36px;
-    height: 36px;
+    width: 36px; height: 36px;
     border-radius: 50%;
     background: var(--green);
     color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px;
     flex-shrink: 0;
     transition: background 0.2s;
     position: relative;
   }
-
-  .done .stop-num {
-    background: #16a34a;
-  }
-
-  .done .stop-num::after {
-    content: '✓';
-    position: absolute;
-    font-size: 16px;
-  }
-
+  .done .stop-num { background: #16a34a; }
+  .done .stop-num::after { content: '✓'; position: absolute; font-size: 16px; }
   .done .stop-num span { opacity: 0; }
 
   .stop-info { flex: 1; }
-
-  .stop-name {
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 3px;
-  }
-
+  .stop-name { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
   .stop-meta {
-    font-size: 12px;
-    color: var(--muted);
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
+    font-size: 12px; color: var(--muted);
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
   }
 
   .dist-badge {
@@ -161,90 +201,48 @@
     color: var(--green-dark);
     padding: 2px 8px;
     border-radius: 20px;
-    font-weight: 600;
-    font-size: 12px;
+    font-weight: 600; font-size: 12px;
   }
+  .done .dist-badge { background: #dcfce7; color: #15803d; }
 
-  .stop-card.done .dist-badge {
-    background: #dcfce7;
-    color: #15803d;
-  }
-
-  .stop-actions {
-    display: flex;
-    border-top: 1px solid var(--border);
-  }
-
+  .stop-actions { display: flex; border-top: 1px solid var(--border); }
   .done .stop-actions { border-color: var(--done-border); }
 
   .btn-map {
-    flex: 1;
-    padding: 11px;
-    background: none;
-    border: none;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
+    flex: 1; padding: 11px;
+    background: none; border: none;
+    font-family: inherit; font-size: 13px; font-weight: 600;
     color: var(--green-dark);
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
     transition: background 0.15s;
     text-decoration: none;
   }
-
   .btn-map:hover { background: var(--green-light); }
 
   .btn-done {
     padding: 11px 16px;
-    background: none;
-    border: none;
+    background: none; border: none;
     border-right: 1px solid var(--border);
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    color: var(--muted); cursor: pointer;
+    transition: all 0.15s; white-space: nowrap;
   }
-
-  .done .btn-done {
-    color: #16a34a;
-    border-color: var(--done-border);
-  }
-
+  .done .btn-done { color: #16a34a; border-color: var(--done-border); }
   .btn-done:hover { background: #f0fdf4; color: #16a34a; }
 
+  /* ===== SUMMARY ===== */
   .summary-card {
     background: var(--green);
     color: white;
     border-radius: 14px;
     padding: 16px;
     margin-bottom: 12px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
+    display: flex; gap: 12px; flex-wrap: wrap;
   }
-
-  .summary-stat {
-    flex: 1;
-    min-width: 80px;
-    text-align: center;
-  }
-
-  .summary-stat .val {
-    font-size: 22px;
-    font-weight: 700;
-  }
-
-  .summary-stat .lbl {
-    font-size: 11px;
-    opacity: 0.85;
-    margin-top: 2px;
-  }
+  .summary-stat { flex: 1; min-width: 80px; text-align: center; }
+  .summary-stat .val { font-size: 22px; font-weight: 700; }
+  .summary-stat .lbl { font-size: 11px; opacity: 0.85; margin-top: 2px; }
 
   .end-badge {
     background: linear-gradient(135deg, #1a1a2e, #16213e);
@@ -252,129 +250,387 @@
     border-radius: 14px;
     padding: 14px 16px;
     margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border: none;
+    display: flex; align-items: center; gap: 12px;
     box-shadow: var(--shadow);
   }
-
   .end-icon {
-    width: 36px;
-    height: 36px;
+    width: 36px; height: 36px;
     background: var(--green);
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
   }
-
   .end-info { flex: 1; }
   .end-name { font-size: 15px; font-weight: 700; }
   .end-sub { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+
+  /* ===== TRIP MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+
+  .modal {
+    background: white;
+    border-radius: 20px 20px 0 0;
+    width: 100%; max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px 16px 40px;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .modal-header h2 { font-size: 18px; font-weight: 700; }
+  .btn-close {
+    width: 32px; height: 32px;
+    background: var(--bg); border: none; border-radius: 50%;
+    font-size: 18px; cursor: pointer; color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .modal-section { margin-bottom: 16px; }
+  .modal-label { font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
+
+  .trip-name-input {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit; font-size: 15px;
+    background: var(--bg);
+  }
+  .trip-name-input:focus { outline: none; border-color: var(--green); background: white; }
+
+  /* Add stop row */
+  .add-stop-row {
+    display: flex; gap: 8px; margin-bottom: 8px;
+  }
+  .stop-input {
+    flex: 1; padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit; font-size: 14px;
+    background: var(--bg);
+  }
+  .stop-input:focus { outline: none; border-color: var(--green); background: white; }
+  .stop-coord { width: 110px; direction: ltr; }
+
+  .btn-add-stop {
+    padding: 10px 16px;
+    background: var(--green);
+    color: white; border: none;
+    border-radius: 10px;
+    font-family: inherit; font-size: 20px;
+    cursor: pointer; line-height: 1;
+  }
+
+  /* Planned stops list */
+  .planned-list { margin-top: 8px; }
+  .planned-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg);
+    border-radius: 10px;
+    margin-bottom: 6px;
+    border: 1.5px solid var(--border);
+  }
+  .planned-num {
+    width: 28px; height: 28px;
+    background: var(--green);
+    color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .planned-info { flex: 1; }
+  .planned-name { font-size: 14px; font-weight: 600; }
+  .planned-dist { font-size: 12px; color: var(--muted); }
+  .btn-remove {
+    background: none; border: none;
+    color: var(--red); cursor: pointer; font-size: 18px; padding: 4px;
+  }
+
+  .sort-info {
+    background: var(--green-light);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--green-dark);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 8px; }
+  .btn-sort {
+    flex: 1; padding: 13px;
+    background: var(--bg);
+    color: var(--green-dark);
+    border: 1.5px solid var(--green);
+    border-radius: 12px;
+    font-family: inherit; font-size: 14px; font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-sort:hover { background: var(--green-light); }
+
+  .btn-start-trip {
+    flex: 2; padding: 13px;
+    background: var(--green);
+    color: white; border: none;
+    border-radius: 12px;
+    font-family: inherit; font-size: 15px; font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-start-trip:hover { background: var(--green-dark); }
+  .btn-start-trip:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ===== TRIPS TABS ===== */
+  .trips-bar {
+    background: white;
+    border-bottom: 2px solid var(--border);
+    padding: 0 12px;
+    display: flex; gap: 4px; overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .trips-bar::-webkit-scrollbar { display: none; }
+
+  .trip-tab {
+    padding: 12px 16px;
+    background: none; border: none; border-bottom: 2px solid transparent;
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    color: var(--muted); cursor: pointer; white-space: nowrap;
+    margin-bottom: -2px; flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .trip-tab.active { color: var(--green); border-bottom-color: var(--green); }
+  .trip-tab:hover:not(.active) { color: var(--text); }
+
+  .loc-status-bar {
+    font-size: 12px;
+    padding: 6px 16px;
+    background: rgba(0,0,0,0.06);
+    color: rgba(255,255,255,0.9);
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🗺️ مسار نهدي اليوم</h1>
-  <div class="header-sub">
-    <span id="done-count">0 / 21 محطة</span>
-    <span id="km-remaining">• 0 كم متبقي</span>
+  <div class="header-top">
+    <h1>🗺️ مسار نهدي</h1>
+    <button class="btn-new-trip" onclick="openTripModal()">+ رحلة جديدة</button>
   </div>
-  <div id="loc-status" style="font-size:12px; opacity:0.8; margin-top:4px;">⏳ جاري تحديد موقعك...</div>
+  <div class="header-sub">
+    <span id="done-count">0 / 0 محطة</span>
+    <span id="km-remaining">• — كم متبقي</span>
+  </div>
+  <div id="loc-status" class="loc-status-bar">⏳ جاري تحديد موقعك...</div>
   <div class="progress-bar">
     <div class="progress-fill" id="progress" style="width:0%"></div>
   </div>
 </header>
 
-<div class="container">
+<!-- GPS fallback banner -->
+<div class="gps-banner" id="gps-banner">
+  <h3>⚠️ تعذّر تحديد موقعك تلقائياً</h3>
+  <p>أدخل إحداثياتك يدوياً، أو اضغط "موقع الدمام الافتراضي" للمتابعة.</p>
+  <div class="gps-inputs">
+    <input class="gps-input" id="manual-lat" placeholder="خط العرض (Lat)" type="number" step="0.0001">
+    <input class="gps-input" id="manual-lng" placeholder="خط الطول (Lng)" type="number" step="0.0001">
+    <button class="btn-dammam" onclick="useDammam()">📍 الدمام</button>
+    <button class="btn-set-loc" onclick="setManualLocation()">تأكيد</button>
+  </div>
+</div>
 
-  <div class="summary-card">
-    <div class="summary-stat">
-      <div class="val">21</div>
-      <div class="lbl">محطة</div>
+<!-- Trips tabs -->
+<div class="trips-bar" id="trips-bar"></div>
+
+<div class="container" id="main-container"></div>
+
+<!-- New Trip Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalIfOutside(event)">
+  <div class="modal" id="trip-modal">
+    <div class="modal-header">
+      <h2>➕ رحلة جديدة</h2>
+      <button class="btn-close" onclick="closeTripModal()">✕</button>
     </div>
-    <div class="summary-stat">
-      <div class="val" id="total-km">~</div>
-      <div class="lbl">كم إجمالي</div>
+
+    <div class="modal-section">
+      <div class="modal-label">اسم الرحلة</div>
+      <input class="trip-name-input" id="trip-name-input" placeholder="مثال: رحلة بكرة" maxlength="30">
     </div>
-    <div class="summary-stat">
-      <div class="val">الدمام</div>
-      <div class="lbl">البداية</div>
+
+    <div class="modal-section">
+      <div class="modal-label">أضف محطة</div>
+      <div class="add-stop-row">
+        <input class="stop-input" id="new-stop-name" placeholder="اسم المحطة" maxlength="30">
+        <input class="stop-input stop-coord" id="new-stop-lat" placeholder="Lat" type="number" step="0.0001">
+        <input class="stop-input stop-coord" id="new-stop-lng" placeholder="Lng" type="number" step="0.0001">
+        <button class="btn-add-stop" onclick="addPlannedStop()">+</button>
+      </div>
+      <div style="font-size:11px; color:var(--muted); padding: 0 4px;">
+        💡 احصل على الإحداثيات من Google Maps: انقر على الموقع ← انسخ الأرقام
+      </div>
     </div>
-    <div class="summary-stat">
-      <div class="val">الخبر</div>
-      <div class="lbl">النهاية</div>
+
+    <div class="sort-info">
+      <span>🔀</span>
+      <span>بعد إضافة كل المحطات، اضغط "رتّب" لترتيبها تلقائياً من موقعك الحالي بأقصر مسار ممكن.</span>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-label">المحطات المضافة (<span id="planned-count">0</span>)</div>
+      <div class="planned-list" id="planned-list"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-sort" onclick="autoSortStops()">🔀 رتّب</button>
+      <button class="btn-start-trip" id="btn-start-trip" onclick="createTrip()" disabled>🚀 ابدأ الرحلة</button>
     </div>
   </div>
-
-  <div id="stops-container"></div>
-
-  <div class="section-label">🏁 نهاية الرحلة</div>
-  <div class="end-badge">
-    <div class="end-icon">🏁</div>
-    <div class="end-info">
-      <div class="end-name">الخبر + العزيزية</div>
-      <div class="end-sub">ختام الرحلة</div>
-    </div>
-  </div>
-
 </div>
 
 <script>
+// ========================
+// STATE
+// ========================
 let YOUR_LAT = 26.3917, YOUR_LNG = 50.0349;
 let locationReady = false;
+let locationAttempted = false;
+let gpsTimeout;
 
-// Live GPS
+// Trips data: array of {id, name, stops: [{name, lat, lng, area}]}
+let trips = JSON.parse(localStorage.getItem('nahdi_trips') || 'null');
+let doneMap = JSON.parse(localStorage.getItem('nahdi_done_map') || '{}'); // {tripId: [indices]}
+let activeTripId = localStorage.getItem('nahdi_active_trip') || null;
+
+// Planned stops for new trip modal
+let plannedStops = [];
+
+// ========================
+// DEFAULT TRIP (Today)
+// ========================
+const DEFAULT_TRIP = {
+  id: 'today',
+  name: 'مسار اليوم',
+  stops: [
+    { name: "الصمود",    lat: 26.4071, lng: 50.0364, area: "دمام" },
+    { name: "الإرادة",   lat: 26.391002, lng: 50.037429, area: "دمام" },
+    { name: "العمق",     lat: 26.558716, lng: 50.053618, area: "شمال" },
+    { name: "الاتحاد",   lat: 26.568367, lng: 50.008734, area: "شمال" },
+    { name: "الصفوة",    lat: 26.650827, lng: 49.956128, area: "شمال" },
+    { name: "رأس تنورة", lat: 26.704148, lng: 50.067670, area: "شمال" },
+    { name: "مفتي",      lat: 26.361542, lng: 50.194997, area: "خبر شمال" },
+    { name: "ماربيلا",   lat: 26.337674, lng: 50.153132, area: "خبر" },
+    { name: "القطوف",    lat: 26.335238, lng: 50.191207, area: "خبر" },
+    { name: "العزوة",    lat: 26.322389, lng: 50.158432, area: "خبر" },
+    { name: "مشاري",     lat: 26.309453, lng: 50.222935, area: "خبر" },
+    { name: "النافع",    lat: 26.307146, lng: 50.210071, area: "خبر" },
+    { name: "الرسالة",   lat: 26.305886, lng: 50.169864, area: "خبر" },
+    { name: "البشاشة",   lat: 26.298361, lng: 50.178444, area: "خبر" },
+    { name: "الأنيقة",   lat: 26.291041, lng: 50.219815, area: "خبر" },
+    { name: "تيماء",     lat: 26.290169, lng: 50.199171, area: "خبر" },
+    { name: "العطاء",    lat: 26.286439, lng: 50.190604, area: "خبر جنوب" },
+    { name: "العناق",    lat: 26.208922, lng: 50.190949, area: "جنوب" },
+    { name: "الأثير",    lat: 26.214513, lng: 50.207306, area: "جنوب" },
+    { name: "الزعامة",   lat: 26.176101, lng: 50.162387, area: "جنوب" },
+    { name: "الجمالية",  lat: 26.289, lng: 50.213, area: "خبر" },
+  ]
+};
+
+if (!trips) {
+  trips = [DEFAULT_TRIP];
+  saveTrips();
+}
+if (!activeTripId || !trips.find(t => t.id === activeTripId)) {
+  activeTripId = trips[0].id;
+}
+
+function saveTrips() {
+  localStorage.setItem('nahdi_trips', JSON.stringify(trips));
+}
+function saveDone() {
+  localStorage.setItem('nahdi_done_map', JSON.stringify(doneMap));
+}
+function getActiveDone() {
+  if (!doneMap[activeTripId]) doneMap[activeTripId] = [];
+  return new Set(doneMap[activeTripId]);
+}
+function setActiveDone(set) {
+  doneMap[activeTripId] = [...set];
+  saveDone();
+}
+
+// ========================
+// GPS
+// ========================
 function startTracking() {
   if (!navigator.geolocation) {
-    document.getElementById('loc-status').textContent = '⚠️ الجهاز لا يدعم GPS';
+    showGpsBanner();
     return;
   }
-  document.getElementById('loc-status').textContent = '⏳ جاري تحديد موقعك...';
+  gpsTimeout = setTimeout(() => {
+    if (!locationReady) showGpsBanner();
+  }, 8000);
+
   navigator.geolocation.watchPosition(
     pos => {
+      clearTimeout(gpsTimeout);
       YOUR_LAT = pos.coords.latitude;
       YOUR_LNG = pos.coords.longitude;
       locationReady = true;
-      document.getElementById('loc-status').textContent = `📍 موقعك محدّث • دقة ${Math.round(pos.coords.accuracy)}م`;
-      recalcDists();
-      render();
+      document.getElementById('gps-banner').classList.remove('show');
+      document.getElementById('loc-status').textContent =
+        `📍 موقعك محدّث • دقة ${Math.round(pos.coords.accuracy)}م`;
+      renderActive();
     },
     err => {
-      document.getElementById('loc-status').textContent = '⚠️ تعذّر الوصول للموقع — يستخدم الموقع الافتراضي';
+      clearTimeout(gpsTimeout);
+      showGpsBanner();
     },
-    { enableHighAccuracy: true, maximumAge: 10000, timeout: 15000 }
+    { enableHighAccuracy: true, maximumAge: 10000, timeout: 12000 }
   );
 }
 
-const stops = [
-  { name: "الصمود",    lat: 26.4071, lng: 50.0364, area: "دمام" },
-  { name: "الإرادة",   lat: 26.391002, lng: 50.037429, area: "دمام" },
-  { name: "العمق",     lat: 26.558716, lng: 50.053618, area: "شمال" },
-  { name: "الاتحاد",   lat: 26.568367, lng: 50.008734, area: "شمال" },
-  { name: "الصفوة",    lat: 26.650827, lng: 49.956128, area: "شمال" },
-  { name: "رأس تنورة", lat: 26.704148, lng: 50.067670, area: "شمال" },
-  { name: "مفتي",      lat: 26.361542, lng: 50.194997, area: "خبر شمال" },
-  { name: "ماربيلا",   lat: 26.337674, lng: 50.153132, area: "خبر" },
-  { name: "القطوف",    lat: 26.335238, lng: 50.191207, area: "خبر" },
-  { name: "العزوة",    lat: 26.322389, lng: 50.158432, area: "خبر" },
-  { name: "مشاري",     lat: 26.309453, lng: 50.222935, area: "خبر" },
-  { name: "النافع",    lat: 26.307146, lng: 50.210071, area: "خبر" },
-  { name: "الرسالة",   lat: 26.305886, lng: 50.169864, area: "خبر" },
-  { name: "البشاشة",   lat: 26.298361, lng: 50.178444, area: "خبر" },
-  { name: "الأنيقة",   lat: 26.291041, lng: 50.219815, area: "خبر" },
-  { name: "تيماء",     lat: 26.290169, lng: 50.199171, area: "خبر" },
-  { name: "العطاء",    lat: 26.286439, lng: 50.190604, area: "خبر جنوب" },
-  { name: "العناق",    lat: 26.208922, lng: 50.190949, area: "جنوب" },
-  { name: "الأثير",    lat: 26.214513, lng: 50.207306, area: "جنوب" },
-  { name: "الزعامة",   lat: 26.176101, lng: 50.162387, area: "جنوب" },
-  { name: "الجمالية",  lat: 26.289, lng: 50.213, area: "خبر" },
-];
+function showGpsBanner() {
+  if (locationReady) return;
+  document.getElementById('gps-banner').classList.add('show');
+  document.getElementById('loc-status').textContent = '⚠️ الموقع غير محدد — استخدم الموقع اليدوي';
+}
 
+function useDammam() {
+  YOUR_LAT = 26.3917; YOUR_LNG = 50.0349;
+  locationReady = true;
+  document.getElementById('gps-banner').classList.remove('show');
+  document.getElementById('loc-status').textContent = '📍 موقع افتراضي: الدمام';
+  renderActive();
+}
+
+function setManualLocation() {
+  const lat = parseFloat(document.getElementById('manual-lat').value);
+  const lng = parseFloat(document.getElementById('manual-lng').value);
+  if (isNaN(lat) || isNaN(lng)) { alert('أدخل إحداثيات صحيحة'); return; }
+  YOUR_LAT = lat; YOUR_LNG = lng;
+  locationReady = true;
+  document.getElementById('gps-banner').classList.remove('show');
+  document.getElementById('loc-status').textContent = `📍 موقع يدوي: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+  renderActive();
+}
+
+// ========================
+// DISTANCE
+// ========================
 function dist(lat1, lng1, lat2, lng2) {
   const R = 6371;
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -383,59 +639,77 @@ function dist(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-const dists = [];
-
-function recalcDists() {
-  dists.length = 0;
+function calcDists(stops) {
+  const dists = [];
   let prevLat = YOUR_LAT, prevLng = YOUR_LNG;
-  let totalKm = 0;
-  stops.forEach((s) => {
-    const d = dist(prevLat, prevLng, s.lat, s.lng);
-    dists.push({ fromPrev: d });
-    totalKm += d;
+  stops.forEach(s => {
+    dists.push(dist(prevLat, prevLng, s.lat, s.lng));
     prevLat = s.lat; prevLng = s.lng;
   });
-  document.getElementById('total-km').textContent = '~' + Math.round(totalKm) + ' كم';
+  return dists;
 }
 
-recalcDists();
-
-const done = new Set(JSON.parse(localStorage.getItem('nahdi_done') || '[]'));
-
-function mapsUrl(lat, lng, name) {
-  return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+// ========================
+// RENDER
+// ========================
+function renderTabs() {
+  const bar = document.getElementById('trips-bar');
+  bar.innerHTML = '';
+  trips.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'trip-tab' + (t.id === activeTripId ? ' active' : '');
+    const done = getActiveTripDone(t.id);
+    btn.textContent = `${t.name} (${done}/${t.stops.length})`;
+    btn.onclick = () => { activeTripId = t.id; localStorage.setItem('nahdi_active_trip', activeTripId); renderActive(); };
+    bar.appendChild(btn);
+  });
 }
 
-function groupLabel(area, prev) {
-  const groups = {
-    "دمام": "📍 الدمام — ابدأ من هنا",
-    "شمال": "⬆️ الشمال — رأس تنورة",
-    "خبر شمال": "⬇️ العودة جنوباً — الخبر",
-    "خبر": null,
-    "خبر جنوب": null,
-    "جنوب": "⬇️ أقصى الجنوب",
-  };
-  if (area !== prev && groups[area] !== null) return groups[area];
-  return null;
+function getActiveTripDone(tripId) {
+  return (doneMap[tripId] || []).length;
 }
 
-function render() {
-  const container = document.getElementById('stops-container');
+function renderActive() {
+  renderTabs();
+  const trip = trips.find(t => t.id === activeTripId);
+  if (!trip) return;
+
+  const stops = trip.stops;
+  const done = getActiveDone();
+  const dists = calcDists(stops);
+  const totalKm = dists.reduce((a,b) => a+b, 0);
+
+  const container = document.getElementById('main-container');
   container.innerHTML = '';
-  let prevArea = '';
 
+  // Summary card
+  const summary = document.createElement('div');
+  summary.className = 'summary-card';
+  const startName = stops[0]?.area || '—';
+  const endName = stops[stops.length-1]?.area || '—';
+  summary.innerHTML = `
+    <div class="summary-stat"><div class="val">${stops.length}</div><div class="lbl">محطة</div></div>
+    <div class="summary-stat"><div class="val">~${Math.round(totalKm)}</div><div class="lbl">كم إجمالي</div></div>
+    <div class="summary-stat"><div class="val">${startName}</div><div class="lbl">البداية</div></div>
+    <div class="summary-stat"><div class="val">${endName}</div><div class="lbl">النهاية</div></div>
+  `;
+  container.appendChild(summary);
+
+  // Stops
+  let prevArea = '';
   stops.forEach((s, i) => {
-    const label = groupLabel(s.area, prevArea);
-    if (label) {
+    const area = s.area || '';
+    if (area && area !== prevArea) {
       const lDiv = document.createElement('div');
       lDiv.className = 'section-label';
-      lDiv.textContent = label;
+      lDiv.textContent = '📍 ' + area;
       container.appendChild(lDiv);
     }
-    prevArea = s.area;
+    prevArea = area;
 
     const isDone = done.has(i);
     const d = dists[i];
+    const distStr = d < 1 ? Math.round(d*1000)+'م' : d.toFixed(1)+' كم';
 
     const card = document.createElement('div');
     card.className = 'stop-card' + (isDone ? ' done' : '');
@@ -445,14 +719,14 @@ function render() {
         <div class="stop-info">
           <div class="stop-name">${s.name}</div>
           <div class="stop-meta">
-            <span class="dist-badge">${d.fromPrev < 1 ? Math.round(d.fromPrev*1000)+'م' : d.fromPrev.toFixed(1)+' كم'} من السابق</span>
-            <span>${s.area}</span>
+            <span class="dist-badge">${distStr} من السابق</span>
+            ${area ? `<span>${area}</span>` : ''}
           </div>
         </div>
       </div>
       <div class="stop-actions">
         <button class="btn-done" onclick="toggleDone(${i}, event)">${isDone ? '✓ تمت الزيارة' : 'تم'}</button>
-        <a class="btn-map" href="${mapsUrl(s.lat, s.lng, s.name)}" target="_blank" onclick="event.stopPropagation()">
+        <a class="btn-map" href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}" target="_blank" onclick="event.stopPropagation()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           افتح في الخريطة
         </a>
@@ -461,32 +735,169 @@ function render() {
     container.appendChild(card);
   });
 
-  updateProgress();
+  // End badge
+  const endSec = document.createElement('div');
+  endSec.className = 'section-label';
+  endSec.textContent = '🏁 نهاية الرحلة';
+  container.appendChild(endSec);
+
+  const endBadge = document.createElement('div');
+  endBadge.className = 'end-badge';
+  endBadge.innerHTML = `
+    <div class="end-icon">🏁</div>
+    <div class="end-info">
+      <div class="end-name">${stops[stops.length-1]?.name || '—'}</div>
+      <div class="end-sub">ختام الرحلة</div>
+    </div>
+  `;
+  container.appendChild(endBadge);
+
+  updateProgress(stops, done, dists);
 }
 
 function toggleDone(i, e) {
   e.stopPropagation();
+  const done = getActiveDone();
   if (done.has(i)) done.delete(i); else done.add(i);
-  localStorage.setItem('nahdi_done', JSON.stringify([...done]));
-  render();
+  setActiveDone(done);
+  renderActive();
 }
 
-function updateProgress() {
+function updateProgress(stops, done, dists) {
   const n = done.size;
   const total = stops.length;
   document.getElementById('done-count').textContent = `${n} / ${total} محطة`;
   document.getElementById('progress').style.width = (n/total*100) + '%';
 
-  // remaining km from last done stop
   let lastDone = -1;
   done.forEach(i => { if (i > lastDone) lastDone = i; });
   let rem = 0;
-  for (let i = lastDone+1; i < stops.length; i++) rem += dists[i].fromPrev;
+  for (let i = lastDone+1; i < stops.length; i++) rem += dists[i];
   document.getElementById('km-remaining').textContent = `• ${Math.round(rem)} كم متبقي`;
 }
 
-render();
-startTracking();
+// ========================
+// TRIP MODAL
+// ========================
+function openTripModal() {
+  plannedStops = [];
+  document.getElementById('trip-name-input').value = '';
+  document.getElementById('new-stop-name').value = '';
+  document.getElementById('new-stop-lat').value = '';
+  document.getElementById('new-stop-lng').value = '';
+  renderPlannedList();
+  document.getElementById('modal-overlay').classList.add('show');
+}
 
+function closeTripModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+}
+
+function closeModalIfOutside(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeTripModal();
+}
+
+function addPlannedStop() {
+  const name = document.getElementById('new-stop-name').value.trim();
+  const lat = parseFloat(document.getElementById('new-stop-lat').value);
+  const lng = parseFloat(document.getElementById('new-stop-lng').value);
+  if (!name) { alert('أدخل اسم المحطة'); return; }
+  if (isNaN(lat) || isNaN(lng)) { alert('أدخل إحداثيات صحيحة'); return; }
+  plannedStops.push({ name, lat, lng, area: '' });
+  document.getElementById('new-stop-name').value = '';
+  document.getElementById('new-stop-lat').value = '';
+  document.getElementById('new-stop-lng').value = '';
+  document.getElementById('new-stop-name').focus();
+  renderPlannedList();
+}
+
+function removePlannedStop(i) {
+  plannedStops.splice(i, 1);
+  renderPlannedList();
+}
+
+function renderPlannedList() {
+  const list = document.getElementById('planned-list');
+  document.getElementById('planned-count').textContent = plannedStops.length;
+  document.getElementById('btn-start-trip').disabled = plannedStops.length === 0;
+
+  if (plannedStops.length === 0) {
+    list.innerHTML = '<div style="text-align:center; color:var(--muted); padding:20px; font-size:13px;">لا توجد محطات بعد</div>';
+    return;
+  }
+
+  const dists = calcDistsFromList(plannedStops);
+  list.innerHTML = '';
+  plannedStops.forEach((s, i) => {
+    const d = dists[i];
+    const distStr = d < 1 ? Math.round(d*1000)+'م' : d.toFixed(1)+' كم';
+    const item = document.createElement('div');
+    item.className = 'planned-item';
+    item.innerHTML = `
+      <div class="planned-num">${i+1}</div>
+      <div class="planned-info">
+        <div class="planned-name">${s.name}</div>
+        <div class="planned-dist">${distStr} من السابق • ${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}</div>
+      </div>
+      <button class="btn-remove" onclick="removePlannedStop(${i})">✕</button>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function calcDistsFromList(stops) {
+  const dists = [];
+  let prevLat = YOUR_LAT, prevLng = YOUR_LNG;
+  stops.forEach(s => {
+    dists.push(dist(prevLat, prevLng, s.lat, s.lng));
+    prevLat = s.lat; prevLng = s.lng;
+  });
+  return dists;
+}
+
+// ========================
+// AUTO SORT (Nearest Neighbor TSP)
+// ========================
+function autoSortStops() {
+  if (plannedStops.length < 2) return;
+
+  const remaining = [...plannedStops];
+  const sorted = [];
+  let curLat = YOUR_LAT, curLng = YOUR_LNG;
+
+  while (remaining.length > 0) {
+    let nearestIdx = 0;
+    let nearestDist = Infinity;
+    remaining.forEach((s, i) => {
+      const d = dist(curLat, curLng, s.lat, s.lng);
+      if (d < nearestDist) { nearestDist = d; nearestIdx = i; }
+    });
+    const nearest = remaining.splice(nearestIdx, 1)[0];
+    sorted.push(nearest);
+    curLat = nearest.lat; curLng = nearest.lng;
+  }
+
+  plannedStops = sorted;
+  renderPlannedList();
+}
+
+function createTrip() {
+  if (plannedStops.length === 0) return;
+  const name = document.getElementById('trip-name-input').value.trim() || `رحلة ${trips.length + 1}`;
+  const id = 'trip_' + Date.now();
+  trips.push({ id, name, stops: plannedStops.map(s => ({...s})) });
+  saveTrips();
+  activeTripId = id;
+  localStorage.setItem('nahdi_active_trip', activeTripId);
+  closeTripModal();
+  renderActive();
+}
+
+// ========================
+// INIT
+// ========================
+renderActive();
+startTracking();
+</script>
 </body>
 </html>
